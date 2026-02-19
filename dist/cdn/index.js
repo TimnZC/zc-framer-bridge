@@ -73,7 +73,10 @@ function useAuth(options) {
     }),
     [keycloakUrl, keycloakRealm, keycloakClientId]
   );
-  const configKey = useMemo(() => JSON.stringify(keycloakConfig), [keycloakConfig]);
+  const configKey = useMemo(
+    () => JSON.stringify(keycloakConfig),
+    [keycloakConfig]
+  );
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
     isLoading: true,
@@ -174,7 +177,10 @@ function useAuth(options) {
           });
         };
       } catch (error) {
-        console.error("[nav-core] Keycloak initialization failed:", error);
+        console.error(
+          "[nav-core] Keycloak initialization failed:",
+          error
+        );
         if (!cancelled) {
           setAuthState({
             isAuthenticated: false,
@@ -189,7 +195,13 @@ function useAuth(options) {
     return () => {
       cancelled = true;
     };
-  }, [configKey, keycloakConfig, onLoad, enableSilentSsoCheck, checkLoginIframe]);
+  }, [
+    configKey,
+    keycloakConfig,
+    onLoad,
+    enableSilentSsoCheck,
+    checkLoginIframe
+  ]);
   const login = useCallback(() => {
     const keycloak = keycloakRef.current;
     if (!keycloak) return;
@@ -215,7 +227,9 @@ function useAuth(options) {
       try {
         await fetch(revokeUrl, {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
           body: new URLSearchParams({
             client_id: keycloakConfig.clientId,
             token: refreshToken,
@@ -329,4 +343,43 @@ var getCompanyTypeLabel = (type) => {
   return type === "team" ? "Team Account" : "Company Account";
 };
 
-export { AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, DROPDOWN_OFFSET_PX, ICON_SIZE, NAV_HEIGHT_PX, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, USER_MENU_ITEMS, getAvatarColor, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, useAuth };
+// src/utils/color.ts
+var BIT_SHIFT_AMOUNT = 5;
+var AVATAR_COLOR_PAIRS = [
+  { bg: "bg-pri-8", text: "text-pri-80", bgValue: "oklch(0.9636 0.0176 253.34)", textValue: "oklch(0.658 0.1823 256.59)" },
+  { bg: "bg-sec-8", text: "text-sec-80", bgValue: "oklch(0.9591 0.0147 290.31)", textValue: "oklch(0.5913 0.1585 284.25)" },
+  { bg: "bg-ter-8", text: "text-ter-80", bgValue: "oklch(0.9703 0.0167 343.61)", textValue: "oklch(0.7279 0.1872 349.22)" },
+  { bg: "bg-suc-8", text: "text-suc-80", bgValue: "oklch(0.977 0.0158 196.9)", textValue: "oklch(0.7929 0.1183 194.35)" },
+  { bg: "bg-war-8", text: "text-war-80", bgValue: "oklch(0.9796 0.0119 67.69)", textValue: "oklch(0.8019 0.1167 62.39)" },
+  { bg: "bg-dan-8", text: "text-dan-80", bgValue: "oklch(0.9656 0.0177 4.51)", textValue: "oklch(0.6996 0.197366 10.4046)" }
+];
+var COMPANY_COLOR_PAIRS = [
+  { bg: "bg-pri-80", text: "text-pri-8", bgValue: "oklch(0.658 0.1823 256.59)", textValue: "oklch(0.9636 0.0176 253.34)" },
+  { bg: "bg-sec-80", text: "text-sec-8", bgValue: "oklch(0.5913 0.1585 284.25)", textValue: "oklch(0.9591 0.0147 290.31)" },
+  { bg: "bg-ter-80", text: "text-ter-8", bgValue: "oklch(0.7279 0.1872 349.22)", textValue: "oklch(0.9703 0.0167 343.61)" },
+  { bg: "bg-suc-80", text: "text-suc-8", bgValue: "oklch(0.7929 0.1183 194.35)", textValue: "oklch(0.977 0.0158 196.9)" },
+  { bg: "bg-war-80", text: "text-war-8", bgValue: "oklch(0.8019 0.1167 62.39)", textValue: "oklch(0.9796 0.0119 67.69)" },
+  { bg: "bg-dan-80", text: "text-dan-8", bgValue: "oklch(0.6996 0.197366 10.4046)", textValue: "oklch(0.9656 0.0177 4.51)" }
+];
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i += 1) {
+    hash = str.charCodeAt(i) + ((hash << BIT_SHIFT_AMOUNT) - hash);
+  }
+  return hash;
+}
+function getColorPair(str, colorPairs = AVATAR_COLOR_PAIRS) {
+  const defaultPair = colorPairs[0] ?? {
+    bg: "bg-pri-8",
+    text: "text-pri-80",
+    bgValue: "oklch(0.9636 0.0176 253.34)",
+    textValue: "oklch(0.658 0.1823 256.59)"
+  };
+  if (str === null || str === void 0 || str === "") {
+    return defaultPair;
+  }
+  const index = Math.abs(hashString(str)) % colorPairs.length;
+  return colorPairs[index] ?? defaultPair;
+}
+
+export { AVATAR_COLOR_PAIRS, AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, COMPANY_COLOR_PAIRS, DROPDOWN_OFFSET_PX, ICON_SIZE, NAV_HEIGHT_PX, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, USER_MENU_ITEMS, getAvatarColor, getColorPair, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, useAuth };
