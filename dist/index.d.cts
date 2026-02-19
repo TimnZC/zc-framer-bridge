@@ -176,4 +176,29 @@ declare const getAvatarColor: (name: string) => string;
  */
 declare const getCompanyTypeLabel: (type: "team" | "company") => string;
 
-export { AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, type AuthActions, type AuthContext, type AuthState, type Company, type CompanyDropdownMenuProps, type CompanyType, DROPDOWN_OFFSET_PX, ICON_SIZE, type KeycloakConfig, type MenuItem, NAV_HEIGHT_PX, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, type TopNavBarProps, USER_MENU_ITEMS, type UseAuthOptions, type UserDropdownMenuProps, type UserInfo, type UserMenuAction, getAvatarColor, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, useAuth };
+type ColorPair = {
+    bg: string;
+    text: string;
+};
+/**
+ * Avatar fallback colors — light background with darker text.
+ * Used for user avatars.
+ */
+declare const AVATAR_COLOR_PAIRS: readonly ColorPair[];
+/**
+ * Company icon fallback colors — dark background with lighter text.
+ * Used for company/organization icons.
+ */
+declare const COMPANY_COLOR_PAIRS: readonly ColorPair[];
+/**
+ * Get a consistent color pair from a string.
+ * Same input always returns the same color pair — useful for avatar/icon fallbacks
+ * so each user or company always gets the same color.
+ *
+ * @param str - The string to derive the color from (e.g. user name, initials)
+ * @param colorPairs - Array of color pairs to pick from (defaults to AVATAR_COLOR_PAIRS)
+ * @returns A color pair with `bg` and `text` Tailwind class strings
+ */
+declare function getColorPair(str: string, colorPairs?: readonly ColorPair[]): ColorPair;
+
+export { AVATAR_COLOR_PAIRS, AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, type AuthActions, type AuthContext, type AuthState, COMPANY_COLOR_PAIRS, type ColorPair, type Company, type CompanyDropdownMenuProps, type CompanyType, DROPDOWN_OFFSET_PX, ICON_SIZE, type KeycloakConfig, type MenuItem, NAV_HEIGHT_PX, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, type TopNavBarProps, USER_MENU_ITEMS, type UseAuthOptions, type UserDropdownMenuProps, type UserInfo, type UserMenuAction, getAvatarColor, getColorPair, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, useAuth };
