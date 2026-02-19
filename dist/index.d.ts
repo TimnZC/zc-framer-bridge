@@ -177,8 +177,14 @@ declare const getAvatarColor: (name: string) => string;
 declare const getCompanyTypeLabel: (type: "team" | "company") => string;
 
 type ColorPair = {
+    /** Tailwind background class (e.g. 'bg-pri-8') — used in Next.js */
     bg: string;
+    /** Tailwind text class (e.g. 'text-pri-80') — used in Next.js */
     text: string;
+    /** Inline CSS background color (oklch) — used in Framer / inline styles */
+    bgValue: string;
+    /** Inline CSS text color (oklch) — used in Framer / inline styles */
+    textValue: string;
 };
 /**
  * Avatar fallback colors — light background with darker text.
@@ -195,9 +201,11 @@ declare const COMPANY_COLOR_PAIRS: readonly ColorPair[];
  * Same input always returns the same color pair — useful for avatar/icon fallbacks
  * so each user or company always gets the same color.
  *
+ * Next.js: use `colorPair.bg` / `colorPair.text` (Tailwind classes)
+ * Framer:  use `colorPair.bgValue` / `colorPair.textValue` (inline CSS)
+ *
  * @param str - The string to derive the color from (e.g. user name, initials)
  * @param colorPairs - Array of color pairs to pick from (defaults to AVATAR_COLOR_PAIRS)
- * @returns A color pair with `bg` and `text` Tailwind class strings
  */
 declare function getColorPair(str: string, colorPairs?: readonly ColorPair[]): ColorPair;
 
