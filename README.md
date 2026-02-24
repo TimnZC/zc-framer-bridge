@@ -4,36 +4,50 @@ Shared libraries, data, and platform-synced content for Zerocopter's Framer mark
 
 ## Overview
 
-`zc-framer-bridge` is the central repository for everything that bridges Zerocopter's platform with the Framer-based public website. This includes shared TypeScript libraries (authentication, navigation), static data files consumed by Framer components, and any future platform-synced content.
+`zc-framer-bridge` is the central repository for everything that bridges Zerocopter's platform with the Framer-based public website. It provides the `@zerocopter/nav-core` package (authentication, navigation) and hosts static data files consumed by Framer components.
 
 ## Repository Structure
 
 ```
 zc-framer-bridge/
-├── packages/
-│   └── nav-core/              # @zerocopter/nav-core — Auth & navigation library
-│       ├── src/
-│       ├── dist/
-│       ├── package.json
-│       └── tsup.config.ts
+├── src/                       # @zerocopter/nav-core source
+│   ├── hooks/use-auth.ts      # Keycloak auth hook
+│   ├── utils/                 # Text, color utilities
+│   ├── types.ts               # Shared TypeScript types
+│   ├── constants.ts           # Shared constants
+│   └── index.ts               # Package entry point
+├── dist/                      # Built output (ESM, CJS, CDN)
 ├── data/
 │   └── pricing/
 │       └── packages.json      # Pricing packages consumed by Framer
-├── package.json               # Root workspace config
+├── package.json               # @zerocopter/nav-core package
+├── tsconfig.json
+├── tsup.config.ts
 └── README.md
 ```
 
-## Packages
-
-### `@zerocopter/nav-core`
+## @zerocopter/nav-core
 
 Shared navigation logic and Keycloak authentication for Next.js and Framer.
 
--   Keycloak `useAuth` hook with automatic token refresh
--   Cross-platform builds (ESM/CJS for npm, CDN build for Framer via esm.sh)
--   Shared types, constants, and utilities (avatar colors, display names, etc.)
+### Installation
 
-See [`packages/nav-core/`](packages/nav-core/) for full documentation and API reference.
+```bash
+# npm / bun
+bun add @zerocopter/nav-core
+
+# Or from git
+bun add github:TimnZC/zc-framer-bridge
+
+# CDN (Framer)
+import { useAuth } from "https://esm.sh/@zerocopter/nav-core@0.3.0/cdn";
+```
+
+### Features
+
+- Keycloak `useAuth` hook with automatic token refresh and instance caching
+- Cross-platform builds (ESM/CJS for npm, CDN build for Framer via esm.sh)
+- Shared types, constants, and utilities (avatar colors, display names, etc.)
 
 ## Data
 
@@ -41,41 +55,18 @@ See [`packages/nav-core/`](packages/nav-core/) for full documentation and API re
 
 Static JSON manifest containing Zerocopter pricing packages. This file is:
 
--   **Consumed by Framer** to display real-time pricing on the marketing site
--   **Synced automatically** by the `zc-core-api` Pricing Bridge Service to a Scaleway Object Storage bucket
--   **Updated via the platform** — admins manage pricing through the Zerocopter admin panel, which triggers a re-sync
-
-The Framer site fetches this file from the CDN-backed bucket for fast, public, auth-free access.
+- **Consumed by Framer** to display real-time pricing on the marketing site
+- **Synced automatically** by the `zc-core-api` Pricing Bridge Service to a Scaleway Object Storage bucket
+- **Updated via the platform** — admins manage pricing through the Zerocopter admin panel
 
 ## Development
 
-### Prerequisites
-
--   Node.js 18+
--   npm
-
-### Setup
-
 ```bash
-# Install all workspace dependencies
 npm install
-
-# Build nav-core
-npm run build
-
-# Watch mode
-npm run dev
+npm run build    # Build ESM + CJS + CDN
+npm run dev      # Watch mode
+npm run clean    # Clean dist/
 ```
-
-### Adding a New Package
-
-1. Create a new directory under `packages/`
-2. Add a `package.json` with the appropriate name and build scripts
-3. The root workspace config will pick it up automatically
-
-### Adding New Data Files
-
-Place static data files under `data/<domain>/`. These files are consumed by Framer components and/or synced to external storage by backend services.
 
 ## Architecture
 
@@ -83,12 +74,9 @@ Place static data files under `data/<domain>/`. These files are consumed by Fram
 ┌──────────────────┐     ┌─────────────────────┐     ┌───────────────────┐
 │  Zerocopter      │     │  zc-framer-bridge    │     │  Framer Website   │
 │  Platform        │     │                      │     │                   │
-│                  │     │  packages/            │     │  Imports nav-core │
-│  Admin updates   │────▶│    nav-core/         │────▶│  via CDN build    │
-│  pricing data    │     │                      │     │                   │
-│                  │     │  data/                │     │  Fetches pricing  │
-│  zc-core-api     │────▶│    pricing/          │────▶│  from Scaleway    │
-│  syncs to bucket │     │    packages.json     │     │  bucket (CDN)     │
+│  Admin updates   │────▶│  @zerocopter/nav-core│────▶│  CDN build import │
+│  pricing data    │     │  data/pricing/       │────▶│  Fetches from CDN │
+│  zc-core-api     │     │                      │     │                   │
 └──────────────────┘     └─────────────────────┘     └───────────────────┘
 ```
 
