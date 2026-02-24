@@ -1,4 +1,4 @@
-# @zerocopter/nav-core
+# @zerocopter/zc-framer-bridge
 
 Shared navigation logic and authentication for Zerocopter's Next.js application and Framer marketing site.
 
