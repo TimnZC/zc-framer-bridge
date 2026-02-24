@@ -1,11 +1,5 @@
-'use strict';
-
-var Keycloak = require('keycloak-js');
-var react = require('react');
-
-function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
-
-var Keycloak__default = /*#__PURE__*/_interopDefault(Keycloak);
+import Keycloak from 'keycloak-js';
+import { useMemo, useState, useRef, useEffect, useCallback } from 'react';
 
 // src/hooks/use-auth.ts
 
@@ -71,7 +65,7 @@ function useAuth(options) {
     enableSilentSsoCheck = false,
     checkLoginIframe = false
   } = options;
-  const keycloakConfig = react.useMemo(
+  const keycloakConfig = useMemo(
     () => ({
       url: keycloakUrl,
       realm: keycloakRealm,
@@ -79,18 +73,18 @@ function useAuth(options) {
     }),
     [keycloakUrl, keycloakRealm, keycloakClientId]
   );
-  const configKey = react.useMemo(
+  const configKey = useMemo(
     () => JSON.stringify(keycloakConfig),
     [keycloakConfig]
   );
-  const [authState, setAuthState] = react.useState({
+  const [authState, setAuthState] = useState({
     isAuthenticated: false,
     isLoading: true,
     user: null,
     error: null
   });
-  const keycloakRef = react.useRef(null);
-  react.useEffect(() => {
+  const keycloakRef = useRef(null);
+  useEffect(() => {
     let cancelled = false;
     const init = async () => {
       try {
@@ -119,7 +113,7 @@ function useAuth(options) {
           return;
         }
         if (cached === void 0) {
-          const newInstance = new Keycloak__default.default(keycloakConfig);
+          const newInstance = new Keycloak(keycloakConfig);
           cached = {
             instance: newInstance,
             initPromise: null
@@ -208,7 +202,7 @@ function useAuth(options) {
     enableSilentSsoCheck,
     checkLoginIframe
   ]);
-  const login = react.useCallback(() => {
+  const login = useCallback(() => {
     const keycloak = keycloakRef.current;
     if (!keycloak) return;
     void keycloak.login({
@@ -216,7 +210,7 @@ function useAuth(options) {
       scope: "openid"
     });
   }, [loginRedirectUri]);
-  const logout = react.useCallback(async () => {
+  const logout = useCallback(async () => {
     const keycloak = keycloakRef.current;
     if (!keycloak) return;
     const idToken = keycloak.idToken ?? null;
@@ -271,7 +265,7 @@ function useAuth(options) {
     const logoutUrl = `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect/logout?${params.toString()}`;
     window.location.href = logoutUrl;
   }, [keycloakConfig, logoutRedirectUri]);
-  const getToken = react.useCallback(async () => {
+  const getToken = useCallback(async () => {
     const keycloak = keycloakRef.current;
     if (keycloak?.authenticated !== true) return void 0;
     try {
@@ -288,10 +282,10 @@ function useAuth(options) {
       return void 0;
     }
   }, []);
-  const clearError = react.useCallback(() => {
+  const clearError = useCallback(() => {
     setAuthState((prev) => ({ ...prev, error: null }));
   }, []);
-  return react.useMemo(
+  return useMemo(
     () => ({
       ...authState,
       login,
@@ -352,20 +346,80 @@ var getCompanyTypeLabel = (type) => {
 // src/utils/color.ts
 var BIT_SHIFT_AMOUNT = 5;
 var AVATAR_COLOR_PAIRS = [
-  { bg: "bg-pri-8", text: "text-pri-80", bgValue: "oklch(0.9636 0.0176 253.34)", textValue: "oklch(0.658 0.1823 256.59)" },
-  { bg: "bg-sec-8", text: "text-sec-80", bgValue: "oklch(0.9591 0.0147 290.31)", textValue: "oklch(0.5913 0.1585 284.25)" },
-  { bg: "bg-ter-8", text: "text-ter-80", bgValue: "oklch(0.9703 0.0167 343.61)", textValue: "oklch(0.7279 0.1872 349.22)" },
-  { bg: "bg-suc-8", text: "text-suc-80", bgValue: "oklch(0.977 0.0158 196.9)", textValue: "oklch(0.7929 0.1183 194.35)" },
-  { bg: "bg-war-8", text: "text-war-80", bgValue: "oklch(0.9796 0.0119 67.69)", textValue: "oklch(0.8019 0.1167 62.39)" },
-  { bg: "bg-dan-8", text: "text-dan-80", bgValue: "oklch(0.9656 0.0177 4.51)", textValue: "oklch(0.6996 0.197366 10.4046)" }
+  {
+    bg: "bg-pri-8",
+    text: "text-pri-80",
+    bgValue: "oklch(0.9636 0.0176 253.34)",
+    textValue: "oklch(0.658 0.1823 256.59)"
+  },
+  {
+    bg: "bg-sec-8",
+    text: "text-sec-80",
+    bgValue: "oklch(0.9591 0.0147 290.31)",
+    textValue: "oklch(0.5913 0.1585 284.25)"
+  },
+  {
+    bg: "bg-ter-8",
+    text: "text-ter-80",
+    bgValue: "oklch(0.9703 0.0167 343.61)",
+    textValue: "oklch(0.7279 0.1872 349.22)"
+  },
+  {
+    bg: "bg-suc-8",
+    text: "text-suc-80",
+    bgValue: "oklch(0.977 0.0158 196.9)",
+    textValue: "oklch(0.7929 0.1183 194.35)"
+  },
+  {
+    bg: "bg-war-8",
+    text: "text-war-80",
+    bgValue: "oklch(0.9796 0.0119 67.69)",
+    textValue: "oklch(0.8019 0.1167 62.39)"
+  },
+  {
+    bg: "bg-dan-8",
+    text: "text-dan-80",
+    bgValue: "oklch(0.9656 0.0177 4.51)",
+    textValue: "oklch(0.6996 0.197366 10.4046)"
+  }
 ];
 var COMPANY_COLOR_PAIRS = [
-  { bg: "bg-pri-80", text: "text-pri-8", bgValue: "oklch(0.658 0.1823 256.59)", textValue: "oklch(0.9636 0.0176 253.34)" },
-  { bg: "bg-sec-80", text: "text-sec-8", bgValue: "oklch(0.5913 0.1585 284.25)", textValue: "oklch(0.9591 0.0147 290.31)" },
-  { bg: "bg-ter-80", text: "text-ter-8", bgValue: "oklch(0.7279 0.1872 349.22)", textValue: "oklch(0.9703 0.0167 343.61)" },
-  { bg: "bg-suc-80", text: "text-suc-8", bgValue: "oklch(0.7929 0.1183 194.35)", textValue: "oklch(0.977 0.0158 196.9)" },
-  { bg: "bg-war-80", text: "text-war-8", bgValue: "oklch(0.8019 0.1167 62.39)", textValue: "oklch(0.9796 0.0119 67.69)" },
-  { bg: "bg-dan-80", text: "text-dan-8", bgValue: "oklch(0.6996 0.197366 10.4046)", textValue: "oklch(0.9656 0.0177 4.51)" }
+  {
+    bg: "bg-pri-80",
+    text: "text-pri-8",
+    bgValue: "oklch(0.658 0.1823 256.59)",
+    textValue: "oklch(0.9636 0.0176 253.34)"
+  },
+  {
+    bg: "bg-sec-80",
+    text: "text-sec-8",
+    bgValue: "oklch(0.5913 0.1585 284.25)",
+    textValue: "oklch(0.9591 0.0147 290.31)"
+  },
+  {
+    bg: "bg-ter-80",
+    text: "text-ter-8",
+    bgValue: "oklch(0.7279 0.1872 349.22)",
+    textValue: "oklch(0.9703 0.0167 343.61)"
+  },
+  {
+    bg: "bg-suc-80",
+    text: "text-suc-8",
+    bgValue: "oklch(0.7929 0.1183 194.35)",
+    textValue: "oklch(0.977 0.0158 196.9)"
+  },
+  {
+    bg: "bg-war-80",
+    text: "text-war-8",
+    bgValue: "oklch(0.8019 0.1167 62.39)",
+    textValue: "oklch(0.9796 0.0119 67.69)"
+  },
+  {
+    bg: "bg-dan-80",
+    text: "text-dan-8",
+    bgValue: "oklch(0.6996 0.197366 10.4046)",
+    textValue: "oklch(0.9656 0.0177 4.51)"
+  }
 ];
 function hashString(str) {
   let hash = 0;
@@ -388,22 +442,4 @@ function getColorPair(str, colorPairs = AVATAR_COLOR_PAIRS) {
   return colorPairs[index] ?? defaultPair;
 }
 
-exports.AVATAR_COLOR_PAIRS = AVATAR_COLOR_PAIRS;
-exports.AVATAR_SIZE_DESKTOP_PX = AVATAR_SIZE_DESKTOP_PX;
-exports.AVATAR_SIZE_MOBILE_PX = AVATAR_SIZE_MOBILE_PX;
-exports.COMPANY_COLOR_PAIRS = COMPANY_COLOR_PAIRS;
-exports.DROPDOWN_OFFSET_PX = DROPDOWN_OFFSET_PX;
-exports.ICON_SIZE = ICON_SIZE;
-exports.NAV_HEIGHT_PX = NAV_HEIGHT_PX;
-exports.TOKEN_REFRESH_MIN_VALIDITY = TOKEN_REFRESH_MIN_VALIDITY;
-exports.TOKEN_UPDATE_MIN_VALIDITY = TOKEN_UPDATE_MIN_VALIDITY;
-exports.USER_MENU_ITEMS = USER_MENU_ITEMS;
-exports.getAvatarColor = getAvatarColor;
-exports.getColorPair = getColorPair;
-exports.getCompanyTypeLabel = getCompanyTypeLabel;
-exports.getFirstInitial = getFirstInitial;
-exports.getUserDisplayName = getUserDisplayName;
-exports.getUserInitials = getUserInitials;
-exports.useAuth = useAuth;
-//# sourceMappingURL=index.cjs.map
-//# sourceMappingURL=index.cjs.map
+export { AVATAR_COLOR_PAIRS, AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, COMPANY_COLOR_PAIRS, DROPDOWN_OFFSET_PX, ICON_SIZE, NAV_HEIGHT_PX, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, USER_MENU_ITEMS, getAvatarColor, getColorPair, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, useAuth };
