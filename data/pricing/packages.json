@@ -1,0 +1,94 @@
+{
+  "last_updated": "2026-02-24T15:45:00Z",
+  "currency": "EUR",
+  "billing_cycle": "monthly (billed annually)",
+  "packages": [
+    {
+      "id": "core-plan",
+      "name": "Core / CVD Only",
+      "monthly_price": 1250,
+      "included_credits_yearly": 40000,
+      "bug_bounty_handling_fee": "10.0%",
+      "features": {
+        "platform": {
+          "onboarding_setup": true,
+          "asset_map_scoping": true,
+          "continuous_recon": true,
+          "hacker_marketplace": true
+        },
+        "services": {
+          "cvd_ai_triage": true,
+          "bug_bounty_ai_triage": true,
+          "ai_pentest_reporting": true
+        },
+        "hacker_in_the_loop": {
+          "community_pentesting": null,
+          "community_peer_review": null,
+          "human_triage": 1000
+        },
+        "reporting": {
+          "standard": true,
+          "management_dashboards": true
+        }
+      }
+    },
+    {
+      "id": "advanced-plan",
+      "name": "Advanced",
+      "monthly_price": 3000,
+      "included_credits_yearly": 80000,
+      "bug_bounty_handling_fee": "7.5%",
+      "features": {
+        "platform": {
+          "onboarding_setup": true,
+          "asset_map_scoping": true,
+          "continuous_recon": true,
+          "hacker_marketplace": true
+        },
+        "services": {
+          "cvd_ai_triage": true,
+          "bug_bounty_ai_triage": true,
+          "ai_pentest_reporting": true
+        },
+        "hacker_in_the_loop": {
+          "community_pentesting": 60000,
+          "community_peer_review": 20000,
+          "human_triage": 1000
+        },
+        "reporting": {
+          "standard": true,
+          "management_dashboards": true
+        }
+      }
+    },
+    {
+      "id": "professional-plan",
+      "name": "Professional",
+      "monthly_price": 5000,
+      "included_credits_yearly": 160000,
+      "bug_bounty_handling_fee": "5.0%",
+      "features": {
+        "platform": {
+          "onboarding_setup": true,
+          "asset_map_scoping": true,
+          "continuous_recon": true,
+          "hacker_marketplace": true
+        },
+        "services": {
+          "cvd_ai_triage": true,
+          "bug_bounty_ai_triage": true,
+          "ai_pentest_reporting": true
+        },
+        "hacker_in_the_loop": {
+          "community_pentesting": 60000,
+          "community_peer_review": 20000,
+          "human_triage": 1000
+        },
+        "reporting": {
+          "standard": true,
+          "management_dashboards": true
+        }
+      }
+    }
+  ]
+}

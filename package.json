@@ -1,0 +1,19 @@
+{
+  "name": "@zerocopter/framer-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared libraries and data for Zerocopter's Framer website — navigation, pricing, and platform-synced content",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=packages/nav-core",
+    "dev": "npm run dev --workspace=packages/nav-core",
+    "clean": "npm run clean --workspace=packages/nav-core"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zerocopter/zc-framer-bridge.git"
+  }
+}
