@@ -105,7 +105,7 @@ export interface MenuItem {
 
 export interface TopNavBarProps {
   companies: Company[];
-  selectedCompanyId: string;
+  selectedCompanyId?: string;
   onCompanyChange: (companyId: string) => void;
   userName: string;
   userRole: string;
@@ -113,6 +113,9 @@ export interface TopNavBarProps {
   onUserMenuAction?: (action: UserMenuAction) => void;
   isLoading?: boolean;
   className?: string;
+  hideSidebarTrigger?: boolean;
+  isAuthenticated?: boolean;
+  onLoginClick?: (() => void) | undefined;
 }
 
 export interface UserDropdownMenuProps {
