@@ -5,17 +5,19 @@
 // ============================================================================
 
 export const colors = {
-    foreground: "#1f1f1f",
+    // Base (from Figma design tokens)
+    foreground: "#2f3242",
+    foregroundSubtle: "#454858",
     background: "oklch(0.9731 0 0)",
     card: "#ffffff",
     cardForeground: "oklch(0.145 0 0)",
     mutedForeground: "oklch(0.556 0 0)",
     mutedForegroundWeak: "#9093a1",
     baseBorder: "#e0e0e0",
-    zeroBrand: "oklch(0.6569 0.1759 286.1)",
+    zeroBrand: "#8b7cf6",
 
     // Semantic
-    sec100: "oklch(0.4936 0.1986 280.27)",
+    sec100: "#5347cd",
     sec4: "oklch(0.9805 0.0066 286.28)",
     suc100: "oklch(0.7549 0.1264 194.16)",
     ink4: "oklch(0.9642 0 0)",
