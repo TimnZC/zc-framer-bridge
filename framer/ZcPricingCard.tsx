@@ -44,6 +44,7 @@ interface PricingPackage {
     monthly_price: number
     included_credits_yearly: number
     bug_bounty_handling_fee: string
+    card_highlights: string[]
     features: Record<string, Record<string, boolean | number | null>>
 }
 

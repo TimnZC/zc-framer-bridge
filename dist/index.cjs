@@ -567,11 +567,7 @@ function FramerPricingCard({
   onSelect,
   style
 }) {
-  const features = featureSummary ?? Object.entries(pkg.features).flatMap(
-    ([, category]) => Object.entries(category).filter(([, v]) => v === true || typeof v === "number" && v > 0).map(
-      ([k]) => k.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-    )
-  );
+  const features = featureSummary ?? pkg.card_highlights;
   const descriptionText = description ?? `The ${pkg.name.toLowerCase()} plan includes:`;
   return /* @__PURE__ */ jsxRuntime.jsxs(
     "div",
