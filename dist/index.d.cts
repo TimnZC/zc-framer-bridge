@@ -215,15 +215,16 @@ declare const COMPANY_COLOR_PAIRS: readonly ColorPair[];
 declare function getColorPair(str: string, colorPairs?: readonly ColorPair[]): ColorPair;
 
 declare const colors: {
-    readonly foreground: "#1f1f1f";
+    readonly foreground: "#2f3242";
+    readonly foregroundSubtle: "#454858";
     readonly background: "oklch(0.9731 0 0)";
     readonly card: "#ffffff";
     readonly cardForeground: "oklch(0.145 0 0)";
     readonly mutedForeground: "oklch(0.556 0 0)";
     readonly mutedForegroundWeak: "#9093a1";
     readonly baseBorder: "#e0e0e0";
-    readonly zeroBrand: "oklch(0.6569 0.1759 286.1)";
-    readonly sec100: "oklch(0.4936 0.1986 280.27)";
+    readonly zeroBrand: "#8b7cf6";
+    readonly sec100: "#5347cd";
     readonly sec4: "oklch(0.9805 0.0066 286.28)";
     readonly suc100: "oklch(0.7549 0.1264 194.16)";
     readonly ink4: "oklch(0.9642 0 0)";
@@ -288,12 +289,16 @@ interface FramerPricingCardProps {
     currency: string;
     highlighted?: boolean;
     badge?: string;
-    /** Short feature summary lines shown on the card */
+    /** Override the auto-derived feature list */
     featureSummary?: string[];
+    /** Override the description line (default: "The {plan} plan includes:") */
+    description?: string;
+    /** Button label (default: "Select") */
+    ctaLabel?: string;
     onSelect?: () => void;
     style?: React.CSSProperties;
 }
-declare function FramerPricingCard({ pkg, currency, highlighted, badge, featureSummary, onSelect, style, }: FramerPricingCardProps): React.JSX.Element;
+declare function FramerPricingCard({ pkg, currency, highlighted, badge, featureSummary, description, ctaLabel, onSelect, style, }: FramerPricingCardProps): React.JSX.Element;
 
 interface FramerFeatureComparisonTableProps {
     packages: PricingPackage[];

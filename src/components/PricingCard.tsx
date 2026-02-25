@@ -1,7 +1,7 @@
 // ============================================================================
 // Framer-compatible PricingCard
-// Mirrors zcnxt-frontend PricingCard but uses inline CSS instead of Tailwind.
-// Data comes from packages.json via props.
+// Matches Figma node 8349:11919 (subscriptions-card) pixel-for-pixel.
+// Uses inline CSS — no Tailwind dependency.
 // ============================================================================
 
 import React from "react";
@@ -13,19 +13,54 @@ export interface FramerPricingCardProps {
     currency: string;
     highlighted?: boolean;
     badge?: string;
-    /** Short feature summary lines shown on the card */
+    /** Override the auto-derived feature list */
     featureSummary?: string[];
+    /** Override the description line (default: "The {plan} plan includes:") */
+    description?: string;
+    /** Button label (default: "Select") */
+    ctaLabel?: string;
     onSelect?: () => void;
     style?: React.CSSProperties;
 }
 
-const CheckIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
+// ── Inline SVG icons (Framer can't load external SVGs) ──────────────────
+
+const PlanIcon: React.FC = () => (
+    <div
+        style={{
+            width: 36,
+            height: 36,
+            borderRadius: radii.sm,
+            background: colors.zeroBrand,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+        }}
+    >
+        <svg
+            width={16}
+            height={16}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth={1.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z" />
+        </svg>
+    </div>
+);
+
+const CheckIcon: React.FC<{ size?: number }> = ({ size = 20 }) => (
     <svg
         width={size}
         height={size}
         viewBox="0 0 24 24"
         fill="none"
-        stroke={colors.suc100}
+        stroke={colors.zeroBrand}
         strokeWidth={2.5}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -35,8 +70,10 @@ const CheckIcon: React.FC<{ size?: number }> = ({ size = 16 }) => (
     </svg>
 );
 
-function formatPrice(amount: number, currency: string): string {
-    return new Intl.NumberFormat("en-EU", {
+// ── Price formatter matching Figma "3.000€" format ──────────────────────
+
+function formatPriceEU(amount: number, currency: string): string {
+    return new Intl.NumberFormat("de-DE", {
         style: "currency",
         currency,
         minimumFractionDigits: 0,
@@ -44,12 +81,16 @@ function formatPrice(amount: number, currency: string): string {
     }).format(amount);
 }
 
+// ── Component ───────────────────────────────────────────────────────────
+
 export function FramerPricingCard({
     pkg,
     currency,
     highlighted = false,
     badge,
     featureSummary,
+    description,
+    ctaLabel = "Select",
     onSelect,
     style,
 }: FramerPricingCardProps): React.JSX.Element {
@@ -65,25 +106,30 @@ export function FramerPricingCard({
                 )
         );
 
+    const descriptionText =
+        description ?? `The ${pkg.name.toLowerCase()} plan includes:`;
+
     return (
         <div
             style={{
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
-                gap: 24,
-                padding: "24px 0",
-                background: colors.card,
-                borderRadius: radii.lg,
-                border: highlighted
-                    ? `2px solid ${colors.sec100}`
-                    : `1px solid ${colors.baseBorder}`,
-                boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+                gap: 10,
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "64px 44px",
+                background: "#ffffff",
+                borderRadius: radii.sm,
+                overflow: "clip",
+                boxShadow: highlighted
+                    ? `0 0 0 2px ${colors.sec100}, 0 0 10px 0 rgba(0,0,0,0.1)`
+                    : "0 0 10px 0 rgba(0,0,0,0.1)",
                 fontFamily: fonts.sans,
                 ...style,
             }}
         >
-            {/* Badge */}
+            {/* Badge (only when highlighted) */}
             {badge !== undefined && badge.length > 0 && highlighted && (
                 <div
                     style={{
@@ -104,113 +150,165 @@ export function FramerPricingCard({
                 </div>
             )}
 
-            {/* Header — plan name */}
-            <div style={{ padding: "0 24px" }}>
-                <h3
+            {/* ── Header: icon + name + price + separator ── */}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    alignItems: "flex-start",
+                    alignSelf: "stretch",
+                }}
+            >
+                <PlanIcon />
+
+                <div
                     style={{
-                        margin: 0,
-                        fontSize: 18,
-                        fontWeight: 600,
-                        lineHeight: 1,
-                        color: colors.foreground,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 8,
+                        alignItems: "flex-start",
                     }}
                 >
-                    {pkg.name}
-                </h3>
-            </div>
-
-            {/* Price + meta */}
-            <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                    <span
+                    {/* Plan name + price */}
+                    <div
                         style={{
-                            fontSize: 36,
-                            fontWeight: 300,
-                            letterSpacing: "-0.02em",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 0,
                             color: colors.foreground,
                         }}
                     >
-                        {formatPrice(pkg.monthly_price, currency)}
-                    </span>
-                    <span
-                        style={{
-                            fontSize: 14,
-                            fontWeight: 400,
-                            color: colors.mutedForeground,
-                        }}
-                    >
-                        /month
-                    </span>
-                </div>
+                        <span
+                            style={{
+                                fontSize: 32,
+                                fontWeight: 500,
+                                lineHeight: "32px",
+                                letterSpacing: "-0.96px",
+                            }}
+                        >
+                            {pkg.name}
+                        </span>
+                        <span
+                            style={{
+                                fontSize: 16,
+                                fontWeight: 400,
+                                lineHeight: "24px",
+                                letterSpacing: "-0.48px",
+                            }}
+                        >
+                            {formatPriceEU(pkg.monthly_price, currency)}{" "}
+                            <span style={{ color: colors.mutedForegroundWeak }}>
+                                per month
+                            </span>
+                        </span>
+                    </div>
 
+                    {/* Separator line */}
+                    <div
+                        style={{
+                            width: "100%",
+                            height: 0,
+                            borderBottom: `1px solid ${colors.baseBorder}`,
+                        }}
+                    />
+                </div>
+            </div>
+
+            {/* ── Description ── */}
+            <div style={{ alignSelf: "stretch" }}>
                 <p
                     style={{
                         margin: 0,
-                        fontSize: 14,
-                        color: colors.mutedForeground,
-                        lineHeight: 1.5,
+                        fontSize: 12,
+                        fontWeight: 400,
+                        lineHeight: "20px",
+                        letterSpacing: "-0.36px",
+                        color: colors.mutedForegroundWeak,
                     }}
                 >
-                    {formatPrice(pkg.included_credits_yearly, currency)} credits/year
-                    &nbsp;·&nbsp;
-                    {pkg.bug_bounty_handling_fee} handling fee
+                    {descriptionText}
                 </p>
             </div>
 
-            {/* Feature list */}
-            <div style={{ padding: "0 24px" }}>
-                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+            {/* ── Features + button ── */}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 20,
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    alignSelf: "stretch",
+                }}
+            >
+                {/* Feature list */}
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                        alignItems: "flex-start",
+                    }}
+                >
                     {features.map((feature) => (
-                        <li
+                        <div
                             key={feature}
                             style={{
                                 display: "flex",
-                                alignItems: "flex-start",
+                                alignItems: "center",
                                 gap: 8,
                             }}
                         >
-                            <span style={{ marginTop: 2 }}>
-                                <CheckIcon />
-                            </span>
+                            <CheckIcon />
                             <span
                                 style={{
                                     fontSize: 14,
+                                    fontWeight: 400,
+                                    lineHeight: "22px",
+                                    letterSpacing: "-0.42px",
                                     color: colors.foreground,
-                                    lineHeight: 1.4,
                                 }}
                             >
                                 {feature}
                             </span>
-                        </li>
+                        </div>
                     ))}
-                </ul>
-            </div>
+                </div>
 
-            {/* CTA button */}
-            <div style={{ padding: "0 24px" }}>
+                {/* Select button */}
                 <button
                     type="button"
                     onClick={onSelect}
                     style={{
-                        width: "100%",
-                        display: "inline-flex",
+                        display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        height: 40,
-                        padding: "8px 12px",
-                        borderRadius: radii.md,
-                        fontSize: 14,
-                        fontWeight: 500,
-                        fontFamily: fonts.sans,
-                        cursor: "pointer",
-                        transition: "opacity 0.15s",
-                        border: highlighted ? "none" : `1px solid ${colors.baseBorder}`,
-                        background: highlighted ? colors.zeroBrand : "transparent",
-                        color: highlighted ? "#ffffff" : colors.foreground,
+                        gap: 8,
+                        height: 44,
+                        padding: "8px 24px",
+                        borderRadius: radii.sm,
+                        border: "none",
+                        background: colors.foreground,
                         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                        cursor: "pointer",
+                        flexShrink: 0,
                     }}
                 >
-                    Get started
+                    <span
+                        style={{
+                            fontSize: 16,
+                            fontWeight: 500,
+                            lineHeight: "16px",
+                            letterSpacing: "-0.48px",
+                            color: "#ffffff",
+                            opacity: 0.9,
+                            whiteSpace: "nowrap",
+                            fontFamily: fonts.sans,
+                        }}
+                    >
+                        {ctaLabel}
+                    </span>
                 </button>
             </div>
         </div>

@@ -445,16 +445,18 @@ function getColorPair(str, colorPairs = AVATAR_COLOR_PAIRS) {
 
 // src/tokens.ts
 var colors = {
-  foreground: "#1f1f1f",
+  // Base (from Figma design tokens)
+  foreground: "#2f3242",
+  foregroundSubtle: "#454858",
   background: "oklch(0.9731 0 0)",
   card: "#ffffff",
   cardForeground: "oklch(0.145 0 0)",
   mutedForeground: "oklch(0.556 0 0)",
   mutedForegroundWeak: "#9093a1",
   baseBorder: "#e0e0e0",
-  zeroBrand: "oklch(0.6569 0.1759 286.1)",
+  zeroBrand: "#8b7cf6",
   // Semantic
-  sec100: "oklch(0.4936 0.1986 280.27)",
+  sec100: "#5347cd",
   sec4: "oklch(0.9805 0.0066 286.28)",
   suc100: "oklch(0.7549 0.1264 194.16)",
   ink4: "oklch(0.9642 0 0)",
@@ -494,14 +496,44 @@ var CATEGORY_LABELS = {
   hacker_in_the_loop: "Hacker in the Loop",
   reporting: "Reporting"
 };
-var CheckIcon = ({ size = 16 }) => /* @__PURE__ */ jsx(
+var PlanIcon = () => /* @__PURE__ */ jsx(
+  "div",
+  {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: radii.sm,
+      background: colors.zeroBrand,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+      boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
+    },
+    children: /* @__PURE__ */ jsx(
+      "svg",
+      {
+        width: 16,
+        height: 16,
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "#ffffff",
+        strokeWidth: 1.5,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        children: /* @__PURE__ */ jsx("path", { d: "M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z" })
+      }
+    )
+  }
+);
+var CheckIcon = ({ size = 20 }) => /* @__PURE__ */ jsx(
   "svg",
   {
     width: size,
     height: size,
     viewBox: "0 0 24 24",
     fill: "none",
-    stroke: colors.suc100,
+    stroke: colors.zeroBrand,
     strokeWidth: 2.5,
     strokeLinecap: "round",
     strokeLinejoin: "round",
@@ -509,8 +541,8 @@ var CheckIcon = ({ size = 16 }) => /* @__PURE__ */ jsx(
     children: /* @__PURE__ */ jsx("polyline", { points: "20 6 9 17 4 12" })
   }
 );
-function formatPrice(amount, currency) {
-  return new Intl.NumberFormat("en-EU", {
+function formatPriceEU(amount, currency) {
+  return new Intl.NumberFormat("de-DE", {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
@@ -523,6 +555,8 @@ function FramerPricingCard({
   highlighted = false,
   badge,
   featureSummary,
+  description,
+  ctaLabel = "Select",
   onSelect,
   style
 }) {
@@ -531,6 +565,7 @@ function FramerPricingCard({
       ([k]) => k.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
     )
   );
+  const descriptionText = description ?? `The ${pkg.name.toLowerCase()} plan includes:`;
   return /* @__PURE__ */ jsxs(
     "div",
     {
@@ -538,12 +573,14 @@ function FramerPricingCard({
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        gap: 24,
-        padding: "24px 0",
-        background: colors.card,
-        borderRadius: radii.lg,
-        border: highlighted ? `2px solid ${colors.sec100}` : `1px solid ${colors.baseBorder}`,
-        boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+        gap: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "64px 44px",
+        background: "#ffffff",
+        borderRadius: radii.sm,
+        overflow: "clip",
+        boxShadow: highlighted ? `0 0 0 2px ${colors.sec100}, 0 0 10px 0 rgba(0,0,0,0.1)` : "0 0 10px 0 rgba(0,0,0,0.1)",
         fontFamily: fonts.sans,
         ...style
       },
@@ -567,114 +604,189 @@ function FramerPricingCard({
             children: badge
           }
         ),
-        /* @__PURE__ */ jsx("div", { style: { padding: "0 24px" }, children: /* @__PURE__ */ jsx(
-          "h3",
-          {
-            style: {
-              margin: 0,
-              fontSize: 18,
-              fontWeight: 600,
-              lineHeight: 1,
-              color: colors.foreground
-            },
-            children: pkg.name
-          }
-        ) }),
-        /* @__PURE__ */ jsxs("div", { style: { padding: "0 24px", display: "flex", flexDirection: "column", gap: 16 }, children: [
-          /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "baseline", gap: 4 }, children: [
-            /* @__PURE__ */ jsx(
-              "span",
-              {
-                style: {
-                  fontSize: 36,
-                  fontWeight: 300,
-                  letterSpacing: "-0.02em",
-                  color: colors.foreground
-                },
-                children: formatPrice(pkg.monthly_price, currency)
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              "span",
-              {
-                style: {
-                  fontSize: 14,
-                  fontWeight: 400,
-                  color: colors.mutedForeground
-                },
-                children: "/month"
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxs(
-            "p",
-            {
-              style: {
-                margin: 0,
-                fontSize: 14,
-                color: colors.mutedForeground,
-                lineHeight: 1.5
-              },
-              children: [
-                formatPrice(pkg.included_credits_yearly, currency),
-                " credits/year \xA0\xB7\xA0",
-                pkg.bug_bounty_handling_fee,
-                " handling fee"
-              ]
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsx("div", { style: { padding: "0 24px" }, children: /* @__PURE__ */ jsx("ul", { style: { listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 12 }, children: features.map((feature) => /* @__PURE__ */ jsxs(
-          "li",
+        /* @__PURE__ */ jsxs(
+          "div",
           {
             style: {
               display: "flex",
+              flexDirection: "column",
+              gap: 12,
               alignItems: "flex-start",
-              gap: 8
+              alignSelf: "stretch"
             },
             children: [
-              /* @__PURE__ */ jsx("span", { style: { marginTop: 2 }, children: /* @__PURE__ */ jsx(CheckIcon, {}) }),
-              /* @__PURE__ */ jsx(
-                "span",
+              /* @__PURE__ */ jsx(PlanIcon, {}),
+              /* @__PURE__ */ jsxs(
+                "div",
                 {
                   style: {
-                    fontSize: 14,
-                    color: colors.foreground,
-                    lineHeight: 1.4
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    alignItems: "flex-start"
                   },
-                  children: feature
+                  children: [
+                    /* @__PURE__ */ jsxs(
+                      "div",
+                      {
+                        style: {
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0,
+                          color: colors.foreground
+                        },
+                        children: [
+                          /* @__PURE__ */ jsx(
+                            "span",
+                            {
+                              style: {
+                                fontSize: 32,
+                                fontWeight: 500,
+                                lineHeight: "32px",
+                                letterSpacing: "-0.96px"
+                              },
+                              children: pkg.name
+                            }
+                          ),
+                          /* @__PURE__ */ jsxs(
+                            "span",
+                            {
+                              style: {
+                                fontSize: 16,
+                                fontWeight: 400,
+                                lineHeight: "24px",
+                                letterSpacing: "-0.48px"
+                              },
+                              children: [
+                                formatPriceEU(pkg.monthly_price, currency),
+                                " ",
+                                /* @__PURE__ */ jsx("span", { style: { color: colors.mutedForegroundWeak }, children: "per month" })
+                              ]
+                            }
+                          )
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "div",
+                      {
+                        style: {
+                          width: "100%",
+                          height: 0,
+                          borderBottom: `1px solid ${colors.baseBorder}`
+                        }
+                      }
+                    )
+                  ]
                 }
               )
             ]
-          },
-          feature
-        )) }) }),
-        /* @__PURE__ */ jsx("div", { style: { padding: "0 24px" }, children: /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            onClick: onSelect,
-            style: {
-              width: "100%",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 40,
-              padding: "8px 12px",
-              borderRadius: radii.md,
-              fontSize: 14,
-              fontWeight: 500,
-              fontFamily: fonts.sans,
-              cursor: "pointer",
-              transition: "opacity 0.15s",
-              border: highlighted ? "none" : `1px solid ${colors.baseBorder}`,
-              background: highlighted ? colors.zeroBrand : "transparent",
-              color: highlighted ? "#ffffff" : colors.foreground,
-              boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
-            },
-            children: "Get started"
           }
-        ) })
+        ),
+        /* @__PURE__ */ jsx("div", { style: { alignSelf: "stretch" }, children: /* @__PURE__ */ jsx(
+          "p",
+          {
+            style: {
+              margin: 0,
+              fontSize: 12,
+              fontWeight: 400,
+              lineHeight: "20px",
+              letterSpacing: "-0.36px",
+              color: colors.mutedForegroundWeak
+            },
+            children: descriptionText
+          }
+        ) }),
+        /* @__PURE__ */ jsxs(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              alignItems: "flex-start",
+              justifyContent: "center",
+              alignSelf: "stretch"
+            },
+            children: [
+              /* @__PURE__ */ jsx(
+                "div",
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                    alignItems: "flex-start"
+                  },
+                  children: features.map((feature) => /* @__PURE__ */ jsxs(
+                    "div",
+                    {
+                      style: {
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8
+                      },
+                      children: [
+                        /* @__PURE__ */ jsx(CheckIcon, {}),
+                        /* @__PURE__ */ jsx(
+                          "span",
+                          {
+                            style: {
+                              fontSize: 14,
+                              fontWeight: 400,
+                              lineHeight: "22px",
+                              letterSpacing: "-0.42px",
+                              color: colors.foreground
+                            },
+                            children: feature
+                          }
+                        )
+                      ]
+                    },
+                    feature
+                  ))
+                }
+              ),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onSelect,
+                  style: {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    height: 44,
+                    padding: "8px 24px",
+                    borderRadius: radii.sm,
+                    border: "none",
+                    background: colors.foreground,
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                    cursor: "pointer",
+                    flexShrink: 0
+                  },
+                  children: /* @__PURE__ */ jsx(
+                    "span",
+                    {
+                      style: {
+                        fontSize: 16,
+                        fontWeight: 500,
+                        lineHeight: "16px",
+                        letterSpacing: "-0.48px",
+                        color: "#ffffff",
+                        opacity: 0.9,
+                        whiteSpace: "nowrap",
+                        fontFamily: fonts.sans
+                      },
+                      children: ctaLabel
+                    }
+                  )
+                }
+              )
+            ]
+          }
+        )
       ]
     }
   );
