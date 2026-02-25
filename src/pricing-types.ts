@@ -32,6 +32,8 @@ export interface PricingPackage {
     monthly_price: number;
     included_credits_yearly: number;
     bug_bounty_handling_fee: string;
+    /** Curated list of ~5 highlight lines shown on the pricing card */
+    card_highlights: string[];
     features: PricingFeatures;
 }
 

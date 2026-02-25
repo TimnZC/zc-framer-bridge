@@ -9,6 +9,13 @@
       "monthly_price": 1250,
       "included_credits_yearly": 40000,
       "bug_bounty_handling_fee": "10.0%",
+      "card_highlights": [
+        "CVD & bug bounty AI triage",
+        "AI pentest reporting",
+        "Standard dashboards",
+        "10.0% bug bounty handling fees",
+        "40k credits/year"
+      ],
       "features": {
         "platform": {
           "onboarding_setup": true,
@@ -38,6 +45,13 @@
       "monthly_price": 3000,
       "included_credits_yearly": 80000,
       "bug_bounty_handling_fee": "7.5%",
+      "card_highlights": [
+        "Community testing & peer reviews",
+        "Faster human triage",
+        "Advanced dashboards",
+        "7.5% bug bounty handling fees",
+        "80k credits/year"
+      ],
       "features": {
         "platform": {
           "onboarding_setup": true,
@@ -67,6 +81,13 @@
       "monthly_price": 5000,
       "included_credits_yearly": 160000,
       "bug_bounty_handling_fee": "5.0%",
+      "card_highlights": [
+        "Community testing & peer reviews",
+        "Faster human triage",
+        "Advanced dashboards",
+        "5.0% bug bounty handling fees",
+        "160k credits/year"
+      ],
       "features": {
         "platform": {
           "onboarding_setup": true,
