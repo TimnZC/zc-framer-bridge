@@ -62,10 +62,10 @@ Static JSON manifest containing Zerocopter pricing packages. This file is:
 ## Development
 
 ```bash
-npm install
-npm run build    # Build ESM + CJS + CDN
-npm run dev      # Watch mode
-npm run clean    # Clean dist/
+bun install
+bun run build    # Build ESM + CJS + CDN
+bun run dev      # Watch mode
+bun run clean    # Clean dist/
 ```
 
 ## Architecture
