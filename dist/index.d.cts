@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface UserInfo {
     sub?: string;
     email?: string;
@@ -212,4 +214,92 @@ declare const COMPANY_COLOR_PAIRS: readonly ColorPair[];
  */
 declare function getColorPair(str: string, colorPairs?: readonly ColorPair[]): ColorPair;
 
-export { AVATAR_COLOR_PAIRS, AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, type AuthActions, type AuthContext, type AuthState, COMPANY_COLOR_PAIRS, type ColorPair, type Company, type CompanyDropdownMenuProps, type CompanyType, DROPDOWN_OFFSET_PX, ICON_SIZE, type KeycloakConfig, type MenuItem, NAV_HEIGHT_PX, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, type TopNavBarProps, USER_MENU_ITEMS, type UseAuthOptions, type UserDropdownMenuProps, type UserInfo, type UserMenuAction, getAvatarColor, getColorPair, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, useAuth };
+declare const colors: {
+    readonly foreground: "#1f1f1f";
+    readonly background: "oklch(0.9731 0 0)";
+    readonly card: "#ffffff";
+    readonly cardForeground: "oklch(0.145 0 0)";
+    readonly mutedForeground: "oklch(0.556 0 0)";
+    readonly mutedForegroundWeak: "#9093a1";
+    readonly baseBorder: "#e0e0e0";
+    readonly zeroBrand: "oklch(0.6569 0.1759 286.1)";
+    readonly sec100: "oklch(0.4936 0.1986 280.27)";
+    readonly sec4: "oklch(0.9805 0.0066 286.28)";
+    readonly suc100: "oklch(0.7549 0.1264 194.16)";
+    readonly ink4: "oklch(0.9642 0 0)";
+    readonly ink8: "oklch(0.9401 0 0)";
+    readonly ink24: "oklch(0.8141 0 0)";
+    readonly ink40: "oklch(0.683 0 0)";
+    readonly ink64: "oklch(0.4748 0 0)";
+};
+declare const fonts: {
+    readonly sans: "'DM Sans', system-ui, -apple-system, sans-serif";
+};
+declare const radii: {
+    readonly sm: "4px";
+    readonly md: "8px";
+    readonly lg: "10px";
+    readonly full: "9999px";
+};
+
+interface PricingFeatures {
+    platform: {
+        onboarding_setup: boolean;
+        asset_map_scoping: boolean;
+        continuous_recon: boolean;
+        hacker_marketplace: boolean;
+    };
+    services: {
+        cvd_ai_triage: boolean;
+        bug_bounty_ai_triage: boolean;
+        ai_pentest_reporting: boolean;
+    };
+    hacker_in_the_loop: {
+        community_pentesting: number | null;
+        community_peer_review: number | null;
+        human_triage: number | null;
+    };
+    reporting: {
+        standard: boolean;
+        management_dashboards: boolean;
+    };
+}
+interface PricingPackage {
+    id: string;
+    name: string;
+    monthly_price: number;
+    included_credits_yearly: number;
+    bug_bounty_handling_fee: string;
+    features: PricingFeatures;
+}
+interface PricingData {
+    last_updated: string;
+    currency: string;
+    billing_cycle: string;
+    packages: PricingPackage[];
+}
+/** Human-readable labels for each feature key */
+declare const FEATURE_LABELS: Record<string, string>;
+/** Human-readable labels for each feature category */
+declare const CATEGORY_LABELS: Record<string, string>;
+
+interface FramerPricingCardProps {
+    pkg: PricingPackage;
+    currency: string;
+    highlighted?: boolean;
+    badge?: string;
+    /** Short feature summary lines shown on the card */
+    featureSummary?: string[];
+    onSelect?: () => void;
+    style?: React.CSSProperties;
+}
+declare function FramerPricingCard({ pkg, currency, highlighted, badge, featureSummary, onSelect, style, }: FramerPricingCardProps): React.JSX.Element;
+
+interface FramerFeatureComparisonTableProps {
+    packages: PricingPackage[];
+    highlightedPackageId?: string;
+    style?: React.CSSProperties;
+}
+declare function FramerFeatureComparisonTable({ packages, highlightedPackageId, style, }: FramerFeatureComparisonTableProps): React.JSX.Element;
+
+export { AVATAR_COLOR_PAIRS, AVATAR_SIZE_DESKTOP_PX, AVATAR_SIZE_MOBILE_PX, type AuthActions, type AuthContext, type AuthState, CATEGORY_LABELS, COMPANY_COLOR_PAIRS, type ColorPair, type Company, type CompanyDropdownMenuProps, type CompanyType, DROPDOWN_OFFSET_PX, FEATURE_LABELS, FramerFeatureComparisonTable, type FramerFeatureComparisonTableProps, FramerPricingCard, type FramerPricingCardProps, ICON_SIZE, type KeycloakConfig, type MenuItem, NAV_HEIGHT_PX, type PricingData, type PricingFeatures, type PricingPackage, TOKEN_REFRESH_MIN_VALIDITY, TOKEN_UPDATE_MIN_VALIDITY, type TopNavBarProps, USER_MENU_ITEMS, type UseAuthOptions, type UserDropdownMenuProps, type UserInfo, type UserMenuAction, colors, fonts, getAvatarColor, getColorPair, getCompanyTypeLabel, getFirstInitial, getUserDisplayName, getUserInitials, radii, useAuth };

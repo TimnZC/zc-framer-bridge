@@ -50,3 +50,24 @@ export {
     COMPANY_COLOR_PAIRS,
 } from "./utils/color";
 export type { ColorPair } from "./utils/color";
+
+// --- Design Tokens ---
+export { colors, fonts, radii } from "./tokens";
+
+// --- Pricing Types & Labels ---
+export {
+    CATEGORY_LABELS,
+    FEATURE_LABELS,
+} from "./pricing-types";
+export type {
+    PricingData,
+    PricingFeatures,
+    PricingPackage,
+} from "./pricing-types";
+
+// --- Framer Components (inline CSS, no Tailwind) ---
+export { FramerPricingCard } from "./components/PricingCard";
+export type { FramerPricingCardProps } from "./components/PricingCard";
+
+export { FramerFeatureComparisonTable } from "./components/FeatureComparisonTable";
+export type { FramerFeatureComparisonTableProps } from "./components/FeatureComparisonTable";
